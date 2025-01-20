@@ -82,6 +82,7 @@ class List extends HTMLElement {
       return;
     }
     const listContainer = this.shadow.querySelector("#list");
+    
 
     const radioButtons = this.shadow.querySelectorAll('input[name="flexRadioDefault"]');
     radioButtons.forEach((radio) => {
@@ -106,12 +107,8 @@ class List extends HTMLElement {
           return item;
         });
 
-<<<<<<< HEAD
-        this.insertMoreItems();
-=======
         this.insertMoreItems()
         this.listAux = this.firstLetterUpperCase(this.listAux)
->>>>>>> 3c33ac706af596a10538f8e10fdb1a821f0e4566
         this.displayItems(this.listAux, listContainer);
       });
   }
@@ -127,11 +124,6 @@ class List extends HTMLElement {
 
   searchWords() {
     const listContainer = this.shadow.querySelector("#list");
-<<<<<<< HEAD
-    const searchValueLower = this.searchValue.toLowerCase();
-    const regex = new RegExp(`(${searchValueLower})`, "gi");
-=======
->>>>>>> 3c33ac706af596a10538f8e10fdb1a821f0e4566
 
     const searchValueLower = this.searchValue.toLowerCase();
     
@@ -153,45 +145,8 @@ class List extends HTMLElement {
       }
       return false
     })
-<<<<<<< HEAD
-    .map((item) => {
-        
-      if (this.filterOption === 1) {
-        return {
-          email: item.email.replace(regex, '<span class="highlight">$1</span>'),
-          name: item.name,
-          body: item.body
-        };
-
-      } else if (this.filterOption === 2) {
-        return {
-          email: item.email,
-          name: item.name.replace(regex, '<span class="highlight">$1</span>'),
-          body: item.body
-        };
-      } else if (this.filterOption === 3) {
-        return {
-          email: item.email,
-          name: item.name,
-          body: item.body.replace(regex, '<span class="highlight">$1</span>'),
-        };
-      }
-
-    });
-   
-      console.log("filtered ", filtered)
-      filtered.forEach((item) => {
-        console.log("item ", item.body)
-      });
-
-    console.log("filtered ", filtered);
-    filtered.forEach((item) => {
-      console.log("item ", item.body);
-    });
-=======
     
     filtered = this.addHighlight(filtered)
->>>>>>> 3c33ac706af596a10538f8e10fdb1a821f0e4566
 
     const visibleItems = filtered.slice(0, this.start);
     this.displayItems(visibleItems, listContainer);
@@ -233,18 +188,11 @@ class List extends HTMLElement {
     }
   }
 
-<<<<<<< HEAD
-  clearInput() {
-    this.shadow.querySelector("#search").value = "";
-    this.searchValue = "";
-    this.searchWords();
-=======
 
   clearInput(){
     this.shadow.querySelector("#search").value = ""
     this.searchValue = ""
     this.searchWords()
->>>>>>> 3c33ac706af596a10538f8e10fdb1a821f0e4566
   }
 
   firstLetterUpperCase(data) {
