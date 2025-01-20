@@ -11,12 +11,11 @@ class List extends HTMLElement {
     super();
 
     this.shadow.appendChild(this.createHTML());
-    this.createStyles(
-      "src/components/listOfArticles/list.css",
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-    );
+    this.createStyles("src/components/listOfArticles/list.css","https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css","src/components/listOfArticles/list-responsive.css");
+    
     this.fetchAndDisplayData();
     this.addInfiniteScrollListener();
+    
     const searchInput = this.shadow.querySelector("#search");
     searchInput.addEventListener("input", () => {
       const searchValue = searchInput.value.toLowerCase();
@@ -28,64 +27,33 @@ class List extends HTMLElement {
 
   createHTML() {
     const template = `
-       <div class="container mt-4">
-  <div class="search-and-filters d-flex align-items-center mb-4">
-    <div class="search-bar">
-      <input
-        type="text"
-        id="search"
-        class="form-control"
-        placeholder="Search"
-        aria-label="Search"
-      />
-    </div>
-    <div class="filters ms-4 d-flex">
-      <div class="form-check me-3">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="flexRadioDefault"
-          id="flexRadioDefault1"
-          value="1"
-        />
-        <label class="form-check-label" for="flexRadioDefault1">E-mail</label>
-      </div>
-      <div class="form-check me-3">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="flexRadioDefault"
-          id="flexRadioDefault2"
-          value="2"
-          checked
-        />
-        <label class="form-check-label" for="flexRadioDefault2">Título</label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="flexRadioDefault"
-          id="flexRadioDefault3"
-          value="3"
-        />
-        <label class="form-check-label" for="flexRadioDefault3"
-          >Descrição</label
-        >
-      </div>
-    </div>
-  </div>
+ <div class="container mt-4">
+        <div class="search-and-filters d-flex align-items-center mb-4">
+            <div class="search-bar">
+                <input type="text" id="search" class="form-control" placeholder="Search" aria-label="Search" />
+            </div>
+            <div class="filters ms-4 d-flex">
+                <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"value="1" />
+                    <label class="form-check-label" for="flexRadioDefault1">E-mail</label>
+                </div>
+                <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"value="2" checked />
+                    <label class="form-check-label" for="flexRadioDefault2">Título</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3"value="3" />
+                    <label class="form-check-label" for="flexRadioDefault3">Descrição</label>
+                </div>
+            </div>
+        </div>
 
-  <div id="list" class="list-container">
-    <!-- Items will be dynamically added here -->
+        <div id="list" class="list-container"></div>
+        <div class="messageError">
+            <h3 id="messageData">Houve falha ao buscar os dados. Tente novamente mais tarde.</h3>
+            <h3 id="messageSearch">Nenhum item encontrado.</h3>
+        </div>
   </div>
-  <div class="messageError">
-      <h3 id="messageData">
-        Houve falha ao buscar os dados. Tente novamente mais tarde.
-      </h3>
-      <h3 id="messageSearch">Nenhum item encontrado.</h3>
-    </div>
-</div>
 
       `;
 
@@ -115,9 +83,7 @@ class List extends HTMLElement {
     }
     const listContainer = this.shadow.querySelector("#list");
 
-    const radioButtons = this.shadow.querySelectorAll(
-      'input[name="flexRadioDefault"]'
-    );
+    const radioButtons = this.shadow.querySelectorAll('input[name="flexRadioDefault"]');
     radioButtons.forEach((radio) => {
       radio.addEventListener("change", (event) => {
         this.filterOption = parseInt(event.target.value, 10);
@@ -128,18 +94,24 @@ class List extends HTMLElement {
     fetch("https://jsonplaceholder.typicode.com/comments")
       .then((response) => response.json())
       .then((data) => {
+
         if (Object.keys(data).length === 0) {
           this.shadow.querySelector("#messageData").style.display = "flex";
           this.shadow.querySelector("#list").style.height = "0px";
           return;
         }
+
         this.listElements = data.map((item) => {
-          // Substitui todas as quebras de linha "\n" por uma string vazia
           item.body = item.body.replaceAll("\n", " ");
           return item;
         });
 
+<<<<<<< HEAD
         this.insertMoreItems();
+=======
+        this.insertMoreItems()
+        this.listAux = this.firstLetterUpperCase(this.listAux)
+>>>>>>> 3c33ac706af596a10538f8e10fdb1a821f0e4566
         this.displayItems(this.listAux, listContainer);
       });
   }
@@ -148,25 +120,40 @@ class List extends HTMLElement {
     for (let i = this.start; i <= this.end; i++) {
       this.listAux.push(this.listElements[i]);
     }
+
     this.start = this.end + 1;
     this.end = this.end + 40;
   }
 
   searchWords() {
     const listContainer = this.shadow.querySelector("#list");
+<<<<<<< HEAD
     const searchValueLower = this.searchValue.toLowerCase();
     const regex = new RegExp(`(${searchValueLower})`, "gi");
+=======
+>>>>>>> 3c33ac706af596a10538f8e10fdb1a821f0e4566
 
-    const filtered = this.listElements.filter((item) => {
+    const searchValueLower = this.searchValue.toLowerCase();
+    
+    let filtered = this.listElements.filter((item) => {
+      /*
+          1 - E-mail  
+          2 - Título
+          3 - Descrição
+      */
       if (this.filterOption === 1) {
-        return item.email.toLowerCase().includes(searchValueLower);
+        return item.email.toLowerCase().includes(searchValueLower)
+
       } else if (this.filterOption === 2) {
-        return item.name.toLowerCase().includes(searchValueLower);
+        return item.name.toLowerCase().includes(searchValueLower)
+
       } else if (this.filterOption === 3) {
-        return item.body.toLowerCase().includes(searchValueLower);
+        return item.body.toLowerCase().includes(searchValueLower)
+
       }
       return false
     })
+<<<<<<< HEAD
     .map((item) => {
         
       if (this.filterOption === 1) {
@@ -201,37 +188,76 @@ class List extends HTMLElement {
     filtered.forEach((item) => {
       console.log("item ", item.body);
     });
+=======
+    
+    filtered = this.addHighlight(filtered)
+>>>>>>> 3c33ac706af596a10538f8e10fdb1a821f0e4566
 
     const visibleItems = filtered.slice(0, this.start);
     this.displayItems(visibleItems, listContainer);
 
-    if (visibleItems.length == 0) {
+    this.managerOutPutSearch(visibleItems)
+  }
+
+  addHighlight(data) {
+    const searchValueLower = this.searchValue.toLowerCase();
+    const regex = new RegExp(`(${searchValueLower})`, 'gi');
+
+    return data.map((item) => {
+      if (this.filterOption === 1) {
+        return { 
+          email: item.email.replace(regex, '<span class="highlight">$1</span>'), name: item.name, body: item.body
+        }
+      } else if (this.filterOption === 2) {
+        return { 
+          email: item.email, name: item.name.replace(regex, '<span class="highlight">$1</span>'), body: item.body
+        }
+      } else if (this.filterOption === 3) {
+        return { 
+          email: item.email, name: item.name, body: item.body.replace(regex, '<span class="highlight">$1</span>')
+        }
+      }
+
+    })
+  }
+
+  managerOutPutSearch(data) {
+    if (data.length == 0) {
       this.shadow.querySelector("#messageSearch").style.display = "flex";
       this.shadow.querySelector("#list").style.height = "0px";
+
     } else {
       this.shadow.querySelector("#messageSearch").style.display = "none";
       this.shadow.querySelector("#list").style.height = "400px";
+
     }
   }
 
+<<<<<<< HEAD
   clearInput() {
     this.shadow.querySelector("#search").value = "";
     this.searchValue = "";
     this.searchWords();
+=======
+
+  clearInput(){
+    this.shadow.querySelector("#search").value = ""
+    this.searchValue = ""
+    this.searchWords()
+>>>>>>> 3c33ac706af596a10538f8e10fdb1a821f0e4566
   }
 
-  filterDatas(data) {
+  firstLetterUpperCase(data) {
+
     const filtered = data.map((item) => {
       item.email = item.email;
-      item.name =
-        String(item.name).charAt(0).toUpperCase() +
-        String(item.name).toLowerCase().slice(1);
-      item.body =
-        String(item.body).charAt(0).toUpperCase() +
-        String(item.body).toLowerCase().slice(1);
+      item.name = String(item.name).charAt(0).toUpperCase() + String(item.name).toLowerCase().slice(1);
+      item.body = String(item.body).charAt(0).toUpperCase() + String(item.body).toLowerCase().slice(1);
       return item;
     });
+    
     return filtered;
+  
   }
 
   displayItems(items, container) {
@@ -246,7 +272,7 @@ class List extends HTMLElement {
 
       const email = document.createElement("h6");
       email.className = "card-subtitle mb-2 text-muted";
-      email.innerHTML = `E-mail: ${item.email}`;
+      email.innerHTML = item.email
 
       const name = document.createElement("h5");
       name.className = "card-title";
@@ -261,11 +287,13 @@ class List extends HTMLElement {
       cardBody.appendChild(body);
       card.appendChild(cardBody);
       container.appendChild(card);
+
     });
   }
 
   addInfiniteScrollListener() {
     const wrap = this.shadow.querySelector("#list");
+
     wrap.addEventListener("scroll", () => {
       if (wrap.scrollTop + wrap.clientHeight >= wrap.scrollHeight - 10) {
         if (this.listAux.length > 500) {
@@ -274,7 +302,8 @@ class List extends HTMLElement {
         this.insertMoreItems();
 
         const listContainer = this.shadow.querySelector("#list");
-        const filtered = this.filterDatas(this.listAux);
+        const filtered = this.firstLetterUpperCase(this.listAux);
+
         this.displayItems(filtered, listContainer);
         this.searchWords();
       }
